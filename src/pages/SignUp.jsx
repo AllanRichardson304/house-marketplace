@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from '../assets/svg/visibilityIcon.svg'
 import {getAuth,createUserWithEmailAndPassword, updateProfile} from 'firebase/auth'
+import { setDoc,doc, serverTimestamp } from "firebase/firestore"
 import {db} from '../firebase.config'
 export default function SignUp() {
   const [showPassword ,  setShowPassword] = useState(false)
@@ -24,8 +25,12 @@ export default function SignUp() {
     try {
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth,email,password);
-      const use =userCredential.user;
+      const user =userCredential.user;
       updateProfile(auth.currentUser,{displayName:name})
+      const formDataCopy  = {...formData}
+      delete formData.password
+      formDataCopy.timestamp = serverTimestamp()
+      await setDoc(doc(db,'users',user.uid),formDataCopy)
       navigate('/')
     } catch (error) {
       console.log(error)
@@ -40,7 +45,7 @@ export default function SignUp() {
         </p>
       </header>
         <form onSubmit={onSubmit}>
-        <input type="text" className="nameInput" placeholder="Name" id="name" value={email} onChange={onChange} />
+        <input type="text" className="nameInput" placeholder="Name" id="name" value={name} onChange={onChange} />
 
           <input type="email" className="emailInput" placeholder="email" id="email" value={email} onChange={onChange} />
           <div className="passwordInputDiv">
