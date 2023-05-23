@@ -15,7 +15,7 @@ export default function Profile() {
   const {name, email} = formData
   const onLogout = () =>{
    auth.signOut()
-   navigate('/signin')
+   navigate('/')
   }
   const onSubmit = async() => {
    try {
@@ -46,13 +46,13 @@ export default function Profile() {
         <p className="pageHeader">
           My Profile
         </p>
-        <button type='button' className='logOut' onClick={onLogout()}>Logout</button>
+        <button type='button' className='logOut' onClick={onLogout}>Logout</button>
       </header>
       <main>
         <div className="profileDetaisHeader">
           <p className="profileDetailsText">Personal Details</p>
           <p className="changePersonalDetails" onClick={() => {
-            changeDetails && onSubmit(); setChangeDetails(preState => !preState)
+            changeDetails && onSubmit(); setChangeDetails((preState) => !preState)
           }}>{changeDetails ? 'done' : 'change'}</p>
         </div>
         <div className="profileCard">
