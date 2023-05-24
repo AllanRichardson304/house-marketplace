@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import {getAuth,signInWithEmailAndPassword} from 'firebase/auth'
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
 import visibilityIcon from '../assets/svg/visibilityIcon.svg'
+import OAuth from "../components/OAuth"
 export default function SignIn() {
   const [showPassword ,  setShowPassword] = useState(false)
   const [formData , setFormData] = useState({
@@ -54,6 +55,7 @@ export default function SignIn() {
             <button className="signInButton"><ArrowRightIcon fill="#ffffff" width='34px' height='34px' /></button>
           </div>
         </form>
+        <OAuth/>
         <Link to='/signup' className="registerLink"> Sign Up</Link>
     </div>
     </div>
