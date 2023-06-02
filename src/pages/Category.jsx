@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, orderBy, limit, startAfter } from "f
 import { db } from "../firebase.config"
 import { toast } from "react-toastify"
 import Spinner from "../components/Spinner"
+import ListingItem from "../components/ListingItem"
 export default function Category() {
   const [listings, setListings] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -13,20 +14,22 @@ export default function Category() {
     const fetchListings = async () => {
       try {
         const listingsRef = collection(db, 'listings')
-
         const q = query(listingsRef,
           where('type', '==', params.categoryName),
           orderBy('timestamp', 'desc'), limit(10)
         )   
         const querySnap = await getDocs(q)
         const listings = []
+        console.log(querySnap)
         querySnap.forEach((doc) => {
-          console.log(doc.data())
+          console.log(doc)
           return listings.push({
             id: doc.id,
             data: doc.data()
           })
         })
+
+
         setListings(listings)
         setLoading(false)
       } catch (error) {
@@ -36,6 +39,7 @@ export default function Category() {
     fetchListings()
   }, [params.categoryName])
   return (
+    <>
     <div className="category">
       <header>
         <p className="pageHeader">{params.categoryName === 'rent' ? 'Place For Rent' : 'Places For Sale'}</p>
@@ -44,8 +48,9 @@ export default function Category() {
       <>
       <main>
         <ul className="categoryListings">
-          {listings.map((listings) => (
-            <h3 key={listings.id}>{listings.data.name}</h3>
+          {listings.map((listing) => (
+            // <h3 key={listings.id}>{listings.data.name}</h3>
+            <ListingItem listing={listing.data} id={listing.id} key={listing.id} />
           ))}
         </ul>
       </main>
@@ -53,5 +58,6 @@ export default function Category() {
        </> : <p>No listings for {params.categoryName}</p>
     }
     </div>
+    </>
   )
 }
